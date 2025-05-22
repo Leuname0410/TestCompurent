@@ -14,9 +14,9 @@ En el archivo appsettings.json, modifica la propiedad DefaultConnection para que
 
 2. Aplicar Migraciones a la Base de Datos
 Abre la Consola del Administrador de Paquetes NuGet y ejecuta el siguiente comando para aplicar las migraciones y crear la base de datos:
-
+```bash
 Update-Database
-
+```
 3. Procedimiento Almacenado para Restablecer Contraseña
 La aplicación incluye un procedimiento almacenado en la base de datos para restablecer la contraseña de un cliente. Puedes crear este procedimiento ejecutando el siguiente script en SQL Server Management Studio:
 
