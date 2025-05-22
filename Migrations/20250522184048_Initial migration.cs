@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TestCompurent.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -85,7 +85,7 @@ namespace TestCompurent.Migrations
             migrationBuilder.InsertData(
                 table: "Clients",
                 columns: new[] { "Id", "Direction", "Mail", "Name", "Password", "Phone" },
-                values: new object[] { "admin01", "Calle Falsa 123", "admin@example.com", "Administrador", "MusicRadioAdmin", "1234567890" });
+                values: new object[] { "admin01", "Calle Falsa 123", "admin@example.com", "Administrador", "AQAAAAIAAYagAAAAEAMN7qhbcUpKu80y5sM19TwWJNhSW+ureLYIWHW3ZL+WaOWCCTiA1koUzrNG53X6tw==", "1234567890" });
 
             migrationBuilder.InsertData(
                 table: "PurchaseDetails",

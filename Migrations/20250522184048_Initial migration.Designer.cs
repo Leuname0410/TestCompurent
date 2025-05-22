@@ -12,8 +12,8 @@ using TestCompurent.Data;
 namespace TestCompurent.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250522012537_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20250522184048_Initial migration")]
+    partial class Initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,7 +99,7 @@ namespace TestCompurent.Migrations
                             Direction = "Calle Falsa 123",
                             Mail = "admin@example.com",
                             Name = "Administrador",
-                            Password = "MusicRadioAdmin",
+                            Password = "AQAAAAIAAYagAAAAEAMN7qhbcUpKu80y5sM19TwWJNhSW+ureLYIWHW3ZL+WaOWCCTiA1koUzrNG53X6tw==",
                             Phone = "1234567890"
                         });
                 });

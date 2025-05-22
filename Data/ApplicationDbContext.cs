@@ -23,7 +23,7 @@ namespace TestCompurent.Data
                 new Client
                 {
                     Id = "admin01",
-                    Password = "MusicRadioAdmin",
+                    Password = "AQAAAAIAAYagAAAAEAMN7qhbcUpKu80y5sM19TwWJNhSW+ureLYIWHW3ZL+WaOWCCTiA1koUzrNG53X6tw==", // MusicRadio
                     Name = "Administrador",
                     Mail = "admin@example.com",
                     Direction = "Calle Falsa 123",

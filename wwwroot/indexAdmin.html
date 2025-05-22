@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Álbumes y Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="text-center">Gestión de Álbumes</h1>
+
+    <div class="mb-3">
+        <button class="btn btn-success" onclick="mostrarFormularioAlbum()">Agregar Álbum</button>
+    </div>
+
+    <div id="album-form" class="mb-4 d-none">
+        <input type="hidden" id="album-id">
+        <div class="mb-2">
+            <label for="album-name" class="form-label">Nombre del Álbum</label>
+            <input type="text" id="album-name" class="form-control">
+        </div>
+        <div class="mb-2">
+            <label for="album-price" class="form-label">Precio</label>
+            <input type="number" id="album-price" class="form-control">
+        </div>
+        <button class="btn btn-primary" onclick="guardarAlbum()">Guardar</button>
+        <button class="btn btn-secondary" onclick="cancelarAlbum()">Cancelar</button>
+    </div>
+
+    <div id="albumes" class="row"></div>
+
+    <h2 class="mt-5">Usuarios</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="usuarios-body"></tbody>
+    </table>
+</div>
+
+<script>
+    let editandoAlbumId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarAlbumes();
+        cargarUsuarios();
+    });
+
+    function mostrarFormularioAlbum(album = null) {
+        document.getElementById('album-form').classList.remove('d-none');
+        if (album) {
+            document.getElementById('album-id').value = album.id;
+            document.getElementById('album-name').value = album.name;
+            document.getElementById('album-price').value = album.price;
+        } else {
+            document.getElementById('album-id').value = '';
+            document.getElementById('album-name').value = '';
+            document.getElementById('album-price').value = '';
+        }
+    }
+
+    function cancelarAlbum() {
+        document.getElementById('album-form').classList.add('d-none');
+    }
+
+    async function cargarAlbumes() {
+        const res = await fetch('https://localhost:7174/api/Albums');
+        const albumes = await res.json();
+        const container = document.getElementById('albumes');
+        container.innerHTML = '';
+
+        for (const album of albumes) {
+            const col = document.createElement('div');
+            col.className = 'col-md-4';
+            col.innerHTML = `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">${album.name}</h5>
+                        <p class="card-text">Precio: $${album.price}</p>
+                        <button class="btn btn-info btn-sm" onclick="verCanciones(${album.id})">Ver Canciones</button>
+                        <button class="btn btn-primary btn-sm" onclick="mostrarFormularioAlbum(${JSON.stringify(album)})">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarAlbum(${album.id})">Eliminar</button>
+                        <div id="songs-${album.id}" class="mt-2"></div>
+                        <button class="btn btn-success btn-sm mt-2" onclick="agregarCancion(${album.id})">Agregar Canción</button>
+                    </div>
+                </div>`;
+            container.appendChild(col);
+        }
+    }
+
+    async function guardarAlbum() {
+        const id = document.getElementById('album-id').value;
+        const name = document.getElementById('album-name').value;
+        const price = parseFloat(document.getElementById('album-price').value);
+
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `https://localhost:7174/api/Albums/${id}` : 'https://localhost:7174/api/Albums';
+
+        await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, price })
+        });
+
+        cancelarAlbum();
+        cargarAlbumes();
+    }
+
+    async function eliminarAlbum(id) {
+        const result = await Swal.fire({
+            title: '¿Eliminar Álbum?',
+            text: 'Esta acción no se puede deshacer',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar'
+        });
+
+        if (result.isConfirmed) {
+            await fetch(`https://localhost:7174/api/Albums/${id}`, {
+                method: 'DELETE'
+            });
+            cargarAlbumes();
+        }
+    }
+
+    async function verCanciones(albumId) {
+        const res = await fetch(`https://localhost:7174/api/Songs?albumId=${albumId}`);
+        const songs = await res.json();
+        const container = document.getElementById(`songs-${albumId}`);
+        container.innerHTML = songs.map(song => `
+            <div id="song-${song.id}" class="d-flex justify-content-between align-items-center">
+                <span>${song.name}</span>
+                <div>
+                    <button class="btn btn-warning btn-sm" onclick="editarCancion(${song.id}, '${song.name}', ${albumId})">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarCancion(${song.id})">Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function agregarCancion(albumId) {
+        const { value: name } = await Swal.fire({
+            title: 'Nombre de la canción',
+            input: 'text',
+            inputPlaceholder: 'Nombre de la canción',
+            showCancelButton: true
+        });
+
+        if (name) {
+            await fetch(`https://localhost:7174/api/Songs?albumId=${albumId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            verCanciones(albumId);
+        }
+    }
+
+    async function editarCancion(id, nombreActual, albumId) {
+        const { value: name } = await Swal.fire({
+            title: 'Editar canción',
+            input: 'text',
+            inputValue: nombreActual,
+            showCancelButton: true
+        });
+
+        if (name) {
+            await fetch(`https://localhost:7174/api/Songs?songId=${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            verCanciones(albumId);
+        }
+    }
+
+    async function eliminarCancion(id) {
+        const result = await Swal.fire({
+            title: '¿Eliminar canción?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar'
+        });
+
+        if (result.isConfirmed) {
+            await fetch(`https://localhost:7174/api/Songs/${id}`, {
+                method: 'DELETE'
+            });
+            document.getElementById(`song-${id}`).remove();
+        }
+    }
+
+    async function cargarUsuarios() {
+        const res = await fetch('https://localhost:7174/api/Clients');
+        const usuarios = await res.json();
+        const tbody = document.getElementById('usuarios-body');
+        tbody.innerHTML = '';
+
+        usuarios.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${u.id}</td>
+                <td>${u.name}</td>
+                <td>${u.mail}</td>
+                <td>${u.direction}</td>
+                <td>${u.phone}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarUsuario('${u.id}')">Eliminar</button>
+                    <button class="btn btn-warning btn-sm" onclick="resetearPassword('${u.id}')">Reset Password</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    async function eliminarUsuario(id) {
+        const result = await Swal.fire({
+            title: `¿Eliminar usuario ${id}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar'
+        });
+
+        if (result.isConfirmed) {
+            await fetch(`https://localhost:7174/api/Clients/${id}`, {
+                method: 'DELETE'
+            });
+            cargarUsuarios();
+        }
+    }
+
+    async function resetearPassword(id) {
+        const result = await Swal.fire({
+            title: `¿Resetear contraseña para ${id}?`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, resetear'
+        });
+
+        if (result.isConfirmed) {
+            const res = await fetch(`https://localhost:7174/ResetPassword?id=${id}`, {
+                method: 'POST'
+            });
+            const data = await res.json();
+            Swal.fire('Contraseña reseteada', data.message, 'success');
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -16,6 +16,15 @@ namespace TestCompurent.Controllers
         {
             dbContext = context;
         }
+        private string GetClientIdFromSession()
+        {
+            var clientSession = HttpContext.Session.GetString("ClientId");
+
+            if (string.IsNullOrEmpty(clientSession))
+                throw new UnauthorizedAccessException("Session expired or invalid");
+
+            return clientSession;
+        }
 
         [HttpGet]
         [Route("clienteId")]
@@ -34,6 +43,8 @@ namespace TestCompurent.Controllers
         {
             try
             {
+                var clientSession = GetClientIdFromSession();
+
                 var purchase = dbContext.PurchaseDetails
                 .FirstOrDefault(p => p.Client_Id == clientId && p.Id == id);
 
@@ -41,6 +52,10 @@ namespace TestCompurent.Controllers
                     return NotFound(new { Message = "Purchase not found" });
 
                 return Ok(purchase);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -57,6 +72,8 @@ namespace TestCompurent.Controllers
 
             try
             {
+                var clientSession = GetClientIdFromSession();
+
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
@@ -81,6 +98,10 @@ namespace TestCompurent.Controllers
 
                 return Ok(purchase);
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
             catch (Exception ex)
             {
                 return Problem(detail: ex.Message,
@@ -96,6 +117,8 @@ namespace TestCompurent.Controllers
 
             try
             {
+                var clientSession = GetClientIdFromSession();
+
                 var client = dbContext.Clients.Find(clientId);
                 if (client == null)
                     return NotFound(new { Message = "Client not found" });
@@ -110,6 +133,10 @@ namespace TestCompurent.Controllers
                 dbContext.SaveChanges();
 
                 return Ok();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
             }
             catch (Exception ex)
             {

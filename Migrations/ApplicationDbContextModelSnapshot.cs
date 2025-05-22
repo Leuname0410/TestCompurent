@@ -96,7 +96,7 @@ namespace TestCompurent.Migrations
                             Direction = "Calle Falsa 123",
                             Mail = "admin@example.com",
                             Name = "Administrador",
-                            Password = "MusicRadioAdmin",
+                            Password = "AQAAAAIAAYagAAAAEAMN7qhbcUpKu80y5sM19TwWJNhSW+ureLYIWHW3ZL+WaOWCCTiA1koUzrNG53X6tw==",
                             Phone = "1234567890"
                         });
                 });

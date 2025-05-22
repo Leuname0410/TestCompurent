@@ -5,7 +5,7 @@ namespace TestCompurent.Models.Dtos.Client
     public class ChangePasswordDto
     {
         [Required]
-        [MaxLength(100)]
+        [MaxLength(30)]
         public required string NewPassword { get; set; }
     }
 }
