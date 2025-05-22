@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TestCompurent.Data;
-using TestCompurent.Models.Dtos;
+using TestCompurent.Models.Dtos.Album;
 using TestCompurent.Models.Entities;
 
 namespace TestCompurent.Controllers
@@ -46,7 +46,8 @@ namespace TestCompurent.Controllers
             { 
                 var albumEntity = new AlbumSet()
                 {
-                    Name = addAlbumDto.Name
+                    Name = addAlbumDto.Name,
+                    Price = addAlbumDto.Price
                 };
 
                 dbContext.AlbumsSet.Add(albumEntity);
@@ -57,7 +58,7 @@ namespace TestCompurent.Controllers
             catch (Exception ex) 
             {
                 return Problem(detail: ex.Message,
-                                title: "IternalError",
+                                title: "InternalError",
                                 statusCode: 500);
             }
         }

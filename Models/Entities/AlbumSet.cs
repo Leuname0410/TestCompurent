@@ -10,5 +10,8 @@ namespace TestCompurent.Models.Entities
         [Required]
         public required string Name { get; set; }
 
+        [Required]
+        public required float Price { get; set; }
+
     }
 }

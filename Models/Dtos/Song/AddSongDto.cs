@@ -1,4 +1,4 @@
-﻿namespace TestCompurent.Models.Dtos
+﻿namespace TestCompurent.Models.Dtos.Song
 {
     public class AddSongDto
     {

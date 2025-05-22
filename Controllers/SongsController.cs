@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestCompurent.Data;
-using TestCompurent.Models.Dtos;
+using TestCompurent.Models.Dtos.Song;
 using TestCompurent.Models.Entities;
 
 namespace TestCompurent.Controllers
