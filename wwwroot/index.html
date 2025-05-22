@@ -2,218 +2,290 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Compras del Cliente</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-  <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h1>Bienvenido</h1>
-      <div>
-        <button id="update-client-btn" class="btn btn-info d-none">Actualizar Datos</button>
-        <button id="change-password-btn" class="btn btn-warning d-none">Cambiar Contraseña</button>
-      </div>
-    </div>
-    <div id="user-info"></div>
-    <button id="load-purchases" class="btn btn-primary mt-3 d-none">Cargar Compras</button>
-    <div id="purchases" class="mt-3"></div>
-    <button id="load-albums" class="btn btn-success mt-3 d-none">Ver Álbumes</button>
-    <div id="albums" class="row mt-4"></div>
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center">
+    <h1 class="text-center">Bienvenido</h1>
+    <button id="btn-update-info" class="btn btn-outline-secondary d-none">Actualizar Datos</button>
+    <button id="btn-change-password" class="btn btn-outline-warning d-none">Cambiar Contraseña</button>
   </div>
+  <div id="user-info" class="mt-3"></div>
+  <button id="load-purchases" class="btn btn-primary mt-3 d-none">Cargar Compras</button>
+  <div id="purchases" class="mt-4"></div>
+  <button id="load-albums" class="btn btn-success mt-3 d-none">Ver Álbumes</button>
+  <div id="albums" class="row mt-4"></div>
+</div>
 
-  <!-- Login Modal -->
-  <div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header"><h5 class="modal-title">Iniciar Sesión</h5></div>
-        <div class="modal-body">
-          <div class="mb-3"><label>ID</label><input type="text" id="login-id" class="form-control" /></div>
-          <div class="mb-3"><label>Contraseña</label><input type="password" id="login-password" class="form-control" /></div>
-          <button id="open-register" class="btn btn-link p-0">¿No tienes cuenta? Regístrate</button>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" id="login-btn">Ingresar</button>
-        </div>
+<!-- Modal de Login -->
+<div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Inicio de Sesión</h5></div>
+      <div class="modal-body">
+        <div class="mb-3"><label class="form-label">ID</label><input type="text" class="form-control" id="login-id"></div>
+        <div class="mb-3"><label class="form-label">Contraseña</label><input type="password" class="form-control" id="login-password"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="open-register">Registrarse</button>
+        <button class="btn btn-primary" id="login-btn">Ingresar</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Registro Modal -->
-  <div class="modal" id="registerModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header"><h5 class="modal-title">Registro</h5></div>
-        <div class="modal-body">
-          <div class="mb-2"><label>ID</label><input id="reg-id" maxlength="10" class="form-control" /></div>
-          <div class="mb-2"><label>Nombre</label><input id="reg-name" maxlength="100" class="form-control" /></div>
-          <div class="mb-2"><label>Correo</label><input id="reg-mail" type="email" maxlength="50" class="form-control" /></div>
-          <div class="mb-2"><label>Dirección</label><input id="reg-direction" maxlength="500" class="form-control" /></div>
-          <div class="mb-2"><label>Teléfono</label><input id="reg-phone" maxlength="20" class="form-control" /></div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-success" id="save-client">Guardar</button>
-        </div>
+<!-- Modal de Registro -->
+<div class="modal" id="registerModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Registro</h5></div>
+      <div class="modal-body">
+        <div class="mb-2"><label>ID</label><input class="form-control" id="reg-id" maxlength="10"></div>
+        <div class="mb-2"><label>Nombre</label><input class="form-control" id="reg-name" maxlength="100"></div>
+        <div class="mb-2"><label>Correo</label><input class="form-control" id="reg-mail" maxlength="50"></div>
+        <div class="mb-2"><label>Dirección</label><input class="form-control" id="reg-direction" maxlength="500"></div>
+        <div class="mb-2"><label>Teléfono</label><input class="form-control" id="reg-phone" maxlength="20"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-success" id="register-btn">Guardar</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Cambiar Contraseña Modal -->
-  <div class="modal" id="changePasswordModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header"><h5 class="modal-title">Cambiar Contraseña</h5></div>
-        <div class="modal-body">
-          <div class="mb-2"><label>Nueva Contraseña</label><input type="password" id="new-password" class="form-control" /></div>
-          <div class="mb-2"><label>Confirmar Contraseña</label><input type="password" id="confirm-password" class="form-control" /></div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-warning" id="update-password-btn">Actualizar</button>
-        </div>
+<!-- Modal Cambio de Contraseña -->
+<div class="modal" id="passwordModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Cambiar Contraseña</h5></div>
+      <div class="modal-body">
+        <div class="mb-2"><label>Nueva Contraseña</label><input type="password" class="form-control" id="new-password" maxlength="30"></div>
+        <div class="mb-2"><label>Confirmar Contraseña</label><input type="password" class="form-control" id="confirm-password" maxlength="30"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-warning" id="change-password-btn">Cambiar</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Actualizar Datos Modal -->
-  <div class="modal" id="updateClientModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header"><h5 class="modal-title">Actualizar Datos</h5></div>
-        <div class="modal-body">
-          <div class="mb-2"><label>Nombre</label><input id="upd-name" maxlength="100" class="form-control" /></div>
-          <div class="mb-2"><label>Correo</label><input id="upd-mail" type="email" maxlength="50" class="form-control" /></div>
-          <div class="mb-2"><label>Dirección</label><input id="upd-direction" maxlength="500" class="form-control" /></div>
-          <div class="mb-2"><label>Teléfono</label><input id="upd-phone" maxlength="20" class="form-control" /></div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-primary" id="save-updated-client">Guardar Cambios</button>
-        </div>
+<!-- Modal Actualizar Datos -->
+<div class="modal" id="updateModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Actualizar Datos</h5></div>
+      <div class="modal-body">
+        <div class="mb-2"><label>Nombre</label><input class="form-control" id="update-name" maxlength="100"></div>
+        <div class="mb-2"><label>Correo</label><input class="form-control" id="update-mail" maxlength="50"></div>
+        <div class="mb-2"><label>Dirección</label><input class="form-control" id="update-direction" maxlength="500"></div>
+        <div class="mb-2"><label>Teléfono</label><input class="form-control" id="update-phone" maxlength="20"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" id="update-info-btn">Actualizar</button>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    let clientData = null;
-    let loginModal, registerModal, changePasswordModal, updateClientModal;
+<script>
+let clientData = null;
+let loginModal, registerModal, passwordModal, updateModal;
 
-    window.onload = () => {
-      loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-      registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
-      changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
-      updateClientModal = new bootstrap.Modal(document.getElementById('updateClientModal'));
+window.onload = function () {
+  loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+  registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+  passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+  updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
 
-      loginModal.show();
+  loginModal.show();
 
-      document.getElementById('login-btn').onclick = login;
-      document.getElementById('open-register').onclick = () => { loginModal.hide(); registerModal.show(); };
-      document.getElementById('save-client').onclick = registerClient;
-      document.getElementById('change-password-btn').onclick = () => changePasswordModal.show();
-      document.getElementById('update-password-btn').onclick = updatePassword;
-      document.getElementById('update-client-btn').onclick = () => {
-        document.getElementById('upd-name').value = clientData.name;
-        document.getElementById('upd-mail').value = clientData.mail;
-        document.getElementById('upd-direction').value = clientData.direction;
-        document.getElementById('upd-phone').value = clientData.phone;
-        updateClientModal.show();
-      };
-      document.getElementById('save-updated-client').onclick = updateClientData;
-    };
+  document.getElementById('login-btn').onclick = login;
+  document.getElementById('open-register').onclick = () => {
+    loginModal.hide();
+    registerModal.show();
+  };
+  document.getElementById('register-btn').onclick = register;
+  document.getElementById('btn-change-password').onclick = () => passwordModal.show();
+  document.getElementById('change-password-btn').onclick = changePassword;
+  document.getElementById('btn-update-info').onclick = () => {
+    updateModal.show();
+  };
+  document.getElementById('update-info-btn').onclick = updateClientInfo;
 
-    async function login() {
-      const id = document.getElementById('login-id').value;
-      const password = document.getElementById('login-password').value;
+  document.getElementById('load-purchases').onclick = loadPurchases;
+  document.getElementById('load-albums').onclick = loadAlbums;
+};
 
-      const res = await fetch('https://localhost:7174/api/Login', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, password })
-      });
+async function login() {
+  const id = document.getElementById('login-id').value;
+  const password = document.getElementById('login-password').value;
+  const res = await fetch('https://localhost:7174/api/Login', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, password })
+  });
 
-      if (res.status === 401) return Swal.fire('Error', 'Credenciales incorrectas', 'error');
-      clientData = await res.json();
+  if (res.status === 401) return Swal.fire('Error', 'Credenciales inválidas', 'error');
 
-      document.getElementById('user-info').innerText = `Cliente: ${clientData.name} (${clientData.clientId})`;
-      loginModal.hide();
-      document.getElementById('login-id').value = '';
-      document.getElementById('login-password').value = '';
+  if (res.ok) {
+    clientData = await res.json();
+    loginModal.hide();
+    document.getElementById('user-info').innerHTML = `<strong>${clientData.name}</strong> (${clientData.clientId})`;
+    document.getElementById('load-purchases').classList.remove('d-none');
+    document.getElementById('load-albums').classList.remove('d-none');
+    document.getElementById('btn-change-password').classList.remove('d-none');
+    document.getElementById('btn-update-info').classList.remove('d-none');
+  } else {
+    Swal.fire('Error', 'Hubo un problema al iniciar sesión', 'error');
+  }
+}
 
-      ['load-purchases', 'load-albums', 'change-password-btn', 'update-client-btn'].forEach(id =>
-        document.getElementById(id).classList.remove('d-none'));
-    }
+async function register() {
+  const body = {
+    id: document.getElementById('reg-id').value,
+    name: document.getElementById('reg-name').value,
+    mail: document.getElementById('reg-mail').value,
+    direction: document.getElementById('reg-direction').value,
+    phone: document.getElementById('reg-phone').value
+  };
 
-    async function registerClient() {
-      const body = {
-        id: document.getElementById('reg-id').value,
-        name: document.getElementById('reg-name').value,
-        mail: document.getElementById('reg-mail').value,
-        direction: document.getElementById('reg-direction').value,
-        phone: document.getElementById('reg-phone').value
-      };
+  const res = await fetch('https://localhost:7174/api/Clients', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
 
-      const res = await fetch('https://localhost:7174/api/Clients', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
+  if (res.ok) {
+    registerModal.hide();
+    loginModal.show();
+    Swal.fire('Registrado', 'Creado correctamente. Su contraseña es "MusicRadio", cámbiela lo antes posible.', 'success');
+  } else {
+    Swal.fire('Error', 'Hubo un problema al registrar el cliente', 'error');
+  }
+}
 
-      if (res.ok) {
-        registerModal.hide();
-        Swal.fire('¡Registrado!', 'Contraseña predeterminada: <b>MusicRadio</b>', 'success');
-        loginModal.show();
-      } else {
-        Swal.fire('Error', 'No se pudo registrar.', 'error');
-      }
-    }
+async function changePassword() {
+  const pass1 = document.getElementById('new-password').value;
+  const pass2 = document.getElementById('confirm-password').value;
 
-    async function updateClientData() {
-      const updatedData = {
-        name: document.getElementById('upd-name').value,
-        mail: document.getElementById('upd-mail').value,
-        direction: document.getElementById('upd-direction').value,
-        phone: document.getElementById('upd-phone').value
-      };
+  if (pass1 !== pass2) return Swal.fire('Error', 'Las contraseñas no coinciden', 'warning');
 
-      const res = await fetch(`https://localhost:7174/api/Clients/${clientData.clientId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData)
-      });
+  const res = await fetch(`https://localhost:7174/api/Login?id=${clientData.clientId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ newPassword: pass1 })
+  });
 
-      if (res.ok) {
-        updateClientModal.hide();
-        Swal.fire('Actualizado', 'Tus datos han sido actualizados.', 'success');
-        clientData = { ...clientData, ...updatedData };
-        document.getElementById('user-info').innerText = `Cliente: ${clientData.name} (${clientData.clientId})`;
-      } else {
-        Swal.fire('Error', 'No se pudieron actualizar los datos.', 'error');
-      }
-    }
+  if (res.ok) {
+    passwordModal.hide();
+    Swal.fire('Éxito', 'Contraseña cambiada correctamente', 'success');
+  } else {
+    Swal.fire('Error', 'No se pudo cambiar la contraseña', 'error');
+  }
+}
 
-    async function updatePassword() {
-      const newPassword = document.getElementById('new-password').value;
-      const confirm = document.getElementById('confirm-password').value;
-      if (newPassword !== confirm) return Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
+async function updateClientInfo() {
+  const body = {
+    name: document.getElementById('update-name').value,
+    mail: document.getElementById('update-mail').value,
+    direction: document.getElementById('update-direction').value,
+    phone: document.getElementById('update-phone').value
+  };
 
-      const res = await fetch(`https://localhost:7174/api/Login?id=${clientData.clientId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newPassword })
-      });
+  const res = await fetch(`https://localhost:7174/api/Clients/${clientData.clientId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
 
-      if (res.ok) {
-        changePasswordModal.hide();
-        Swal.fire('Éxito', 'Contraseña actualizada', 'success');
-      } else {
-        Swal.fire('Error', 'No se pudo cambiar la contraseña', 'error');
-      }
-    }
-  </script>
+  if (res.ok) {
+    updateModal.hide();
+    Swal.fire('Actualizado', 'Datos actualizados correctamente', 'success');
+  } else {
+    Swal.fire('Error', 'No se pudo actualizar los datos', 'error');
+  }
+}
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+async function loadPurchases() {
+  const res = await fetch(`https://localhost:7174/api/PurchaseDetail/clienteId?clientId=${clientData.clientId}`, {
+    credentials: 'include'
+  });
+  if (await handleUnauthorized(res)) return;
+
+  const purchases = await res.json();
+  const container = document.getElementById('purchases');
+  container.innerHTML = '<h4>Compras:</h4>';
+  purchases.length === 0 ? container.innerHTML += '<p>No se han realizado compras.</p>' :
+    purchases.forEach(p => {
+      container.innerHTML += `<div class="card mb-2"><div class="card-body">Álbum ID: ${p.album_Id} - Total: $${p.total} - Fecha: ${new Date(p.purchaseDate).toLocaleDateString()}</div></div>`;
+    });
+}
+
+async function loadAlbums() {
+  const res = await fetch('https://localhost:7174/api/Albums', { credentials: 'include' });
+  if (await handleUnauthorized(res)) return;
+
+  const albums = await res.json();
+  const container = document.getElementById('albums');
+  container.innerHTML = '';
+  albums.forEach(album => {
+    container.innerHTML += `
+      <div class="col-md-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">${album.name}</h5>
+            <p class="card-text">Precio: $${album.price}</p>
+            <button class="btn btn-info btn-sm mb-1" onclick="verCanciones(${album.id})">Ver Canciones</button>
+            <button class="btn btn-primary btn-sm" onclick="comprar(${album.id})">Comprar</button>
+            <div id="songs-${album.id}" class="mt-2"></div>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+async function verCanciones(albumId) {
+  const res = await fetch(`https://localhost:7174/api/Songs?albumId=${albumId}`, {
+    credentials: 'include'
+  });
+  if (await handleUnauthorized(res)) return;
+  const songs = await res.json();
+  document.getElementById(`songs-${albumId}`).innerHTML = `<ul>${songs.map(s => `<li>${s.name}</li>`).join('')}</ul>`;
+}
+
+async function comprar(albumId) {
+  const fecha = new Date().toISOString();
+  const res = await fetch(`https://localhost:7174/api/PurchaseDetail/clienteId?clientId=${clientData.clientId}`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ album_Id: albumId, purchaseDate: fecha })
+  });
+
+  if (await handleUnauthorized(res)) return;
+
+  Swal.fire(res.ok ? 'Éxito' : 'Error', res.ok ? 'Compra realizada' : 'Error al realizar la compra', res.ok ? 'success' : 'error');
+}
+
+async function handleUnauthorized(response) {
+  if (response.status === 401) {
+    await Swal.fire({ icon: 'warning', title: 'Sesión expirada', text: 'Vuelve a iniciar sesión para continuar' });
+    loginModal.show();
+    return true;
+  }
+  return false;
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
