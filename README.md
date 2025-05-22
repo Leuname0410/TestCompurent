@@ -61,25 +61,19 @@ END
 Inicia la aplicación desde Visual Studio o utilizando el comando dotnet run. Una vez en ejecución, puedes acceder a las siguientes vistas:
 
 Vista de Usuario: https://localhost:7174/index.html
-
 Vista de Administrador: https://localhost:7174/indexAdmin.html
 
 Estructura del Proyecto
 Controllers/: Controladores que manejan las solicitudes HTTP.
-
 Models/: Modelos de datos que representan las entidades de la aplicación.
-
 Data/: Contexto de la base de datos y configuración de Entity Framework.
-
 Migrations/: Archivos de migración generados por Entity Framework.
-
 wwwroot/: Archivos estáticos como HTML, CSS y JavaScript.
-
 appsettings.json: Archivo de configuración de la aplicación.
+
+En las funciones del usuario, es necesario el login para la creación de una variable de sesión manejada por el backend que le habilitará las acciones de: cambio de contraseña, actualización de datos, vista de compras realizadas y realizar compra, se tiene validación en caso de que salte sesión expirada se devuelva a la vista de login
 
 Requisitos
 .NET 6 SDK
-
 SQL Server
-
 Visual Studio 2022 (opcional, pero recomendado)
